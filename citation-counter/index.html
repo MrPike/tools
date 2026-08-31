@@ -45,6 +45,11 @@
     border:1px solid var(--hairline); border-radius:3px; background:var(--bg);
   }
   .field input[type=text]:focus{border-color:var(--accent)}
+  .field select{
+    width:100%; padding:7px 9px; font:13px var(--sans); color:var(--ink);
+    border:1px solid var(--hairline); border-radius:3px; background:var(--bg);
+  }
+  .field select:focus{border-color:var(--accent); outline:none}
   .check{display:flex; align-items:center; gap:10px; padding:6px 0; cursor:pointer; user-select:none}
   .check input{position:absolute; opacity:0; width:0; height:0}
   .check .ring{width:15px; height:15px; border-radius:50%; border:1.5px solid #b9b6ac; display:inline-flex; align-items:center; justify-content:center; flex:none; transition:border-color .15s ease}
@@ -54,8 +59,6 @@
   .check input:focus-visible + .ring{box-shadow:0 0 0 3px var(--accent-soft)}
   .check .txt{font-size:12.5px}
   .check .hint{display:block; font-size:11px; color:var(--ink-soft); margin-top:1px}
-  .check input:disabled + .ring{opacity:.35}
-  .check input:disabled ~ .txt{opacity:.45}
   .fields-2col{display:grid; grid-template-columns:1fr 1fr; gap:0 12px}
   .chartbox{position:relative}
   .dl-hover{position:absolute; top:10px; right:10px; display:none; gap:6px; z-index:2}
@@ -148,18 +151,18 @@
 <main>
   <aside>
     <div class="section">
-      <div class="micro">Citation styles</div>
-      <label class="check"><input type="checkbox" id="optAuto" checked><span class="ring"></span>
-        <span class="txt">Auto-detect<span class="hint">Chooses styles from the document; uncheck to override manually</span></span></label>
+      <div class="micro">Citation style</div>
+      <div class="field">
+        <select id="styleSel" aria-label="Citation style">
+          <option value="auto" selected>Auto-detect</option>
+          <option value="all">All styles</option>
+          <option value="numeric">Numeric brackets &mdash; [1], [4-7]</option>
+          <option value="paren">Parenthetical numbers &mdash; (1), (2,3)</option>
+          <option value="super">Superscript numerals (Vancouver)</option>
+          <option value="ay">Author&ndash;year &mdash; (Smith et al., 2020)</option>
+        </select>
+      </div>
       <div class="note" id="detectNote" style="margin:2px 0 8px"></div>
-      <label class="check"><input type="checkbox" id="optNumeric" checked><span class="ring"></span>
-        <span class="txt">Numeric brackets<span class="hint">[1], [1, 2], [4-7] (ranges expanded)</span></span></label>
-      <label class="check"><input type="checkbox" id="optParen" checked><span class="ring"></span>
-        <span class="txt">Parenthetical numbers<span class="hint">(1), (2,3), (4-6); list and equation guards applied</span></span></label>
-      <label class="check"><input type="checkbox" id="optSuper"><span class="ring"></span>
-        <span class="txt">Superscript numerals (Vancouver)<span class="hint">Raised small digits; heuristic, enable for Vancouver-style theses</span></span></label>
-      <label class="check"><input type="checkbox" id="optAuthorYear" checked><span class="ring"></span>
-        <span class="txt">Author&ndash;year<span class="hint">(Smith et al., 2020; Jones &amp; Lee, 2019), Smith (2020)</span></span></label>
       <label class="check"><input type="checkbox" id="optExcludeRefs"><span class="ring"></span>
         <span class="txt">Exclude reference list<span class="hint">Stops counting at the References / Bibliography section</span></span></label>
     </div>
@@ -629,6 +632,7 @@ function extractPages(buf){
 /* ================= style auto-detection ================= */
 
 var detectionStale = true;   /* re-run detection when a new file is loaded */
+var detectedStyles = null;   /* result of the last detectStyles() call */
 var STYLE_IDS = ["optNumeric","optParen","optSuper","optAuthorYear"];
 var STYLE_NAMES = {
   optNumeric:"numeric brackets", optParen:"parenthetical numbers",
@@ -665,33 +669,31 @@ function detectStyles(){
       on.optNumeric = true; on.optAuthorYear = true;
     }
   }
-  STYLE_IDS.forEach(function(id){ $(id).checked = on[id]; });
   var picked = STYLE_IDS.filter(function(id){ return on[id]; })
                         .map(function(id){ return STYLE_NAMES[id]; });
   $("detectNote").textContent = maxC
     ? "auto-detected: " + picked.join(" + ")
     : "no citations found; defaulting to " + picked.join(" + ");
-}
-
-/* While auto-detect is on, the style checkboxes mirror the detection and
-   stay disabled; unchecking auto-detect hands control to the user. */
-function updateStyleLock(){
-  var auto = $("optAuto").checked;
-  STYLE_IDS.forEach(function(id){ $(id).disabled = auto; });
-  if(!auto) $("detectNote").textContent = "";
+  return on;
 }
 
 /* ================= counting + all panels ================= */
 
 function recount(){
   if(!pageData) return;
-  updateStyleLock();
-  if($("optAuto").checked && detectionStale){
-    detectStyles();
-    detectionStale = false;
+  var sel = $("styleSel").value;
+  var useNum, usePar, useSup, useAY;
+  if(sel === "auto"){
+    if(detectionStale){ detectedStyles = detectStyles(); detectionStale = false; }
+    useNum = detectedStyles.optNumeric; usePar = detectedStyles.optParen;
+    useSup = detectedStyles.optSuper; useAY = detectedStyles.optAuthorYear;
+  } else {
+    $("detectNote").textContent = "";
+    useNum = sel === "numeric" || sel === "all";
+    usePar = sel === "paren" || sel === "all";
+    useSup = sel === "super" || sel === "all";
+    useAY = sel === "ay" || sel === "all";
   }
-  var useNum = $("optNumeric").checked, usePar = $("optParen").checked;
-  var useSup = $("optSuper").checked, useAY = $("optAuthorYear").checked;
   var excl = $("optExcludeRefs").checked;
 
   var rows = [], stopped = null, refsIdx = -1;
@@ -750,12 +752,11 @@ function recount(){
   renderZero(rows);
   $("results").style.display = "block";
 }
-["optAuto","optNumeric","optParen","optSuper","optAuthorYear","optExcludeRefs"].forEach(function(id){
-  $(id).addEventListener("change", function(){
-    if(id === "optAuto" && $("optAuto").checked) detectionStale = true;
-    recount();
-  });
+$("styleSel").addEventListener("change", function(){
+  if($("styleSel").value === "auto") detectionStale = true;
+  recount();
 });
+$("optExcludeRefs").addEventListener("change", recount);
 ["optBars","optLine","colBars","colLine","lblTitle","lblX","lblY1","lblY2"].forEach(function(id){
   $(id).addEventListener("input", function(){ renderChart(); renderDensity(lastRows); });
   $(id).addEventListener("change", function(){ renderChart(); renderDensity(lastRows); });
@@ -1119,7 +1120,6 @@ function showError(msg){ $("errorText").textContent = msg; $("errorCard").style.
 function hideError(){ $("errorCard").style.display = "none"; }
 
 setStatus("", "idle");
-updateStyleLock();
 })();
 </script>
 </body>

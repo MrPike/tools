@@ -10,8 +10,8 @@ Drop a PDF onto the page (or click to browse) and it:
 
 - Counts citations per page. Citation styles — numeric (`[12]`), parenthetical
   numbers, superscripts (Vancouver) and author–year (`(Smith et al., 2020)`,
-  `Smith (2020)`) — are auto-detected per document; uncheck **Auto-detect**
-  to choose styles manually.
+  `Smith (2020)`) — are auto-detected per document, or chosen manually from
+  the style dropdown.
 - Optionally stops counting at the References / Bibliography section.
 - Cross-checks the parsed reference list against in-text citations.
 - Shows stats: total citations, citations per 1k words, per-page density,
