@@ -1,0 +1,6 @@
+{
+  "title": "Citation Counter",
+  "description": "Per-page citation analysis for PDFs: counts numeric and author-year citations, charts density per page, and cross-checks the reference list. Runs entirely in the browser.",
+  "created": "2026-08-24",
+  "tags": ["pdf", "citations", "analysis", "charts"]
+}

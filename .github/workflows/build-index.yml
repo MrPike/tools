@@ -1,0 +1,34 @@
+name: Rebuild tool index
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Generate index.html
+        run: python3 build.py
+
+      - name: Commit updated index.html
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "index.html unchanged"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "Rebuild tool index"
+            git push
+          fi
