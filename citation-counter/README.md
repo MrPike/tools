@@ -14,7 +14,9 @@ Drop a PDF onto the page (or click to browse) and it:
   to choose styles manually.
 - Optionally stops counting at the References / Bibliography section.
 - Cross-checks the parsed reference list against in-text citations.
-- Shows stats: total citations, citations per 1k words, per-page density.
+- Shows stats: total citations, citations per 1k words, per-page density,
+  and a chart of cited publication years (from author–year citations, or
+  looked up from the reference list for numbered citation styles).
 - Draws a customisable chart (title, axis labels, bar/line colours) of
   citations per page plus cumulative count.
 - Hover any chart to download it directly as PNG or SVG; the underlying
