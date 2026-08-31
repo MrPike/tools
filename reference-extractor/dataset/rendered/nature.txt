@@ -1,0 +1,47 @@
+1. Hartwell, D. C. & Ng, P. L. Adaptive filtering of seismic reflection profiles using wavelet packet decomposition. Journal of Applied Geophysics 41, 113–129 (1998).
+
+2. Kjærgaard, S. M., Baudouin, A. & Okafor, C. Nitrogen retention in restored wetlands of the Kjærgaard river basin. Ecological Engineering 13, 201–217 (1999).
+
+3. Vasquez, E. R. & Takeda, H. A distributed algorithm for clock synchronization in fault-tolerant sensor networks. IEEE Transactions on Parallel and Distributed Systems 11, 689–703 (2000).
+
+4. Almeida, R. J. Principles of Computational Hydrology: Models, Methods, and Uncertainty. (Oxford University Press, Oxford, 2001).
+
+5. Ostrowski, M. et al. Genome-wide association mapping of drought tolerance loci in spring wheat. Theoretical and Applied Genetics 104, 987–1001 (2002).
+
+6. Moreau, I. & Petrov, A. Institutional barriers to water-sharing agreements in transboundary basins. in Governance of shared water resources: comparative perspectives (eds. Salazar, B. & Kimura, T.) 145–172 (Edward Elgar, Cheltenham, 2003).
+
+7. Fitzgerald, M., Duarte, C. & Hwang, S.-J. Low-power mesh routing for structural health monitoring of suspension bridges. in Proceedings of the 9th ACM Conference on Embedded Networked Sensor Systems 312–325 (ACM Press, New York, 2004). doi:10.1145/1021446.1021478.
+
+8. Novak, K. Optical trapping dynamics of colloidal particles near dielectric interfaces. (Delft University of Technology, Delft, 2005).
+
+9. Barakat, L. & Johansson, E. Soil carbon turnover under contrasting tillage regimes in semi-arid cropland. Soil Biology and Biochemistry 38, 2451–2463 (2006).
+
+10. Martinez-Campos, L., Whitfield, S. J. & Dubois, R. Phonological priming effects in bilingual lexical access: evidence from eye tracking. Journal of Memory and Language 57, 389–411 (2007).
+
+11. Ashworth, P. & Lindgren, F. Variational inference for sparse Gaussian process modulated point processes. arXiv preprint Preprint at https://arxiv.org/abs/0806.2143 (2008).
+
+12. Grant, O. Open data policies for national meteorological services: a comparative review. Global Data Commons Initiative https://www.datacommons-initiative.org/reports/met-services-review (2009).
+
+13. International Consortium for Coastal Resilience. Guidelines for community-led coastal retreat: synthesis of the five-country pilot programme. Climate Risk Management 6, 1–18 (2010).
+
+14. Zhao, M.-L. & Kowalczyk, T. Thermochromic vanadium dioxide thin films for passive radiative switching. Applied Physics Letters 98, 141905–141908 (2011).
+
+15. Anderson, R. M. & Silva, J. P. Civic participation and trust in municipal government: a longitudinal study of twelve mid-sized cities. Urban Affairs Review 48, 655–684 (2012).
+
+16. Fernández-Ríos, M. J., Łukaszewski, P. & Onyema, A. Catalytic upcycling of polyethylene waste into liquid alkanes over ruthenium nanoparticles. ACS Catalysis 3, 2287–2296 (2013).
+
+17. Bergeron, C. Machine-learned potentials for reactive interfaces: promises and pitfalls. in Frontiers in atomistic simulation: from electrons to engineering (eds. Goldman, A. & Stevenson, M.) 233–268 (Springer, Cham, 2014). doi:10.1007/978-3-319-05274-4_9.
+
+18. Haugen, I. B. & Castellanos, R. Migration timing of Arctic shorebirds responds unevenly to spring warming. Global Change Biology 21, 3011–3023 (2015).
+
+19. Okonkwo, N. & Petersen, L. H. The Economics of Urban Green Space: Valuation Methods and Policy Design. (Routledge, Abingdon, 2016).
+
+20. Sharifi, L., Novaković, S. & Park, J.-H. Deep convolutional networks for automated detection of microaneurysms in retinal fundus images. IEEE Transactions on Medical Imaging 36, 1490–1501 (2017).
+
+21. Quispe-Mamani, R. E. & Callaghan, B. Language revitalization through community radio: evidence from three Andean regions. International Journal of the Sociology of Language 2019, 55–79 (2019).
+
+22. Kaminski, Y., Abebe, S. T. & Fournier, É. Edge computing architectures for real-time wildfire detection from drone imagery. Remote Sensing 13, 2741–2760 (2021).
+
+23. Devereux, A. & Mbeki, T. Federated fine-tuning of compact language models for low-resource translation. in Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics 7821–7836 (Association for Computational Linguistics, Stroudsburg, PA, 2023). doi:10.18653/v1/2023.acl-long.433.
+
+24. Holmberg, A., Reyes-García, T. & Singh, H. Single-cell transcriptomic atlas of regenerating zebrafish myocardium at unprecedented resolution. Nature Communications 16, 1187–1203 (2025).

@@ -1,0 +1,47 @@
+Almeida, Rui J. Principles of Computational Hydrology: Models, Methods, and Uncertainty. 2nd ed. Oxford University Press, 2001.
+
+Anderson, Ruth M., and João P. Silva. “Civic Participation and Trust in Municipal Government: A Longitudinal Study of Twelve Mid-Sized Cities.” Urban Affairs Review 48, no. 5 (2012): 655–84.
+
+Ashworth, Priya, and Finn Lindgren. “Variational Inference for Sparse Gaussian Process Modulated Point Processes.” In arXiv Preprint. Preprint, 2008. 0806.2143. arXiv. https://arxiv.org/abs/0806.2143.
+
+Barakat, Layla, and Erik Johansson. “Soil Carbon Turnover under Contrasting Tillage Regimes in Semi-Arid Cropland.” Soil Biology and Biochemistry 38, no. 9 (2006): 2451–63.
+
+Bergeron, Chloé. “Machine-Learned Potentials for Reactive Interfaces: Promises and Pitfalls.” In Frontiers in Atomistic Simulation: From Electrons to Engineering, edited by Ari Goldman and Mia Stevenson. Springer, 2014. https://doi.org/10.1007/978-3-319-05274-4_9.
+
+Devereux, Aoife, and Thandiwe Mbeki. “Federated Fine-Tuning of Compact Language Models for Low-Resource Translation.” Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Stroudsburg, PA), 2023, 7821–36. https://doi.org/10.18653/v1/2023.acl-long.433.
+
+Fernández-Ríos, María José, Piotr Łukaszewski, and Adaeze Onyema. “Catalytic Upcycling of Polyethylene Waste into Liquid Alkanes over Ruthenium Nanoparticles.” ACS Catalysis 3, no. 10 (2013): 2287–96. https://doi.org/10.1021/cs400517k.
+
+Fitzgerald, Maeve, Carlos Duarte, and Soo-Jin Hwang. “Low-Power Mesh Routing for Structural Health Monitoring of Suspension Bridges.” Proceedings of the 9th ACM Conference on Embedded Networked Sensor Systems (New York), 2004, 312–25. https://doi.org/10.1145/1021446.1021478.
+
+Grant, Olivia. “Open Data Policies for National Meteorological Services: A Comparative Review.” Global Data Commons Initiative, March 14, 2009. https://www.datacommons-initiative.org/reports/met-services-review.
+
+Hartwell, Diane C., and Patrick L. Ng. “Adaptive Filtering of Seismic Reflection Profiles Using Wavelet Packet Decomposition.” Journal of Applied Geophysics 41, no. 2 (1998): 113–29. https://doi.org/10.1016/S0926-9851(98)00021-4.
+
+Haugen, Ingrid B., and Rodrigo Castellanos. “Migration Timing of Arctic Shorebirds Responds Unevenly to Spring Warming.” Global Change Biology 21, no. 8 (2015): 3011–23. https://doi.org/10.1111/gcb.12904.
+
+Holmberg, Astrid, Tomás Reyes-García, and Harpreet Singh. “Single-Cell Transcriptomic Atlas of Regenerating Zebrafish Myocardium at Unprecedented Resolution.” Nature Communications 16 (2025): 1187–203. https://doi.org/10.1038/s41467-025-56123-x.
+
+International Consortium for Coastal Resilience. “Guidelines for Community-Led Coastal Retreat: Synthesis of the Five-Country Pilot Programme.” Climate Risk Management 6 (2010): 1–18. https://doi.org/10.1016/j.crm.2010.03.001.
+
+Kaminski, Yara, Samuel T. Abebe, and Élodie Fournier. “Edge Computing Architectures for Real-Time Wildfire Detection from Drone Imagery.” Remote Sensing 13, no. 14 (2021): 2741–60. https://doi.org/10.3390/rs13142741.
+
+Kjærgaard, Søren M., André Baudouin, and Chinwe Okafor. “Nitrogen Retention in Restored Wetlands of the Kjærgaard River Basin.” Ecological Engineering 13, nos. 1–4 (1999): 201–17. https://doi.org/10.1016/S0925-8574(99)00012-7.
+
+Martinez-Campos, Lucia, Sarah J. Whitfield, and Rémi Dubois. “Phonological Priming Effects in Bilingual Lexical Access: Evidence from Eye Tracking.” Journal of Memory and Language 57, no. 3 (2007): 389–411. https://doi.org/10.1016/j.jml.2007.04.002.
+
+Moreau, Isabelle, and Aleksei Petrov. “Institutional Barriers to Water-Sharing Agreements in Transboundary Basins.” In Governance of Shared Water Resources: Comparative Perspectives, edited by Beatriz Salazar and Takeshi Kimura. Edward Elgar, 2003.
+
+Novak, Katarina. “Optical Trapping Dynamics of Colloidal Particles near Dielectric Interfaces.” PhD thesis, Delft University of Technology, 2005.
+
+Okonkwo, Ngozi, and Lars H. Petersen. The Economics of Urban Green Space: Valuation Methods and Policy Design. Routledge, 2016.
+
+Ostrowski, Magdalena, Wei Chen, Funmilayo Adeyemi, et al. “Genome-Wide Association Mapping of Drought Tolerance Loci in Spring Wheat.” Theoretical and Applied Genetics 104, no. 6 (2002): 987–1001. https://doi.org/10.1007/s00122-002-0914-6.
+
+Quispe-Mamani, Rosa E., and Brendan Callaghan. “Language Revitalization through Community Radio: Evidence from Three Andean Regions.” International Journal of the Sociology of Language 2019, no. 256 (2019): 55–79. https://doi.org/10.1515/ijsl-2018-2010.
+
+Sharifi, Leila, Stefan Novaković, and Ji-Hye Park. “Deep Convolutional Networks for Automated Detection of Microaneurysms in Retinal Fundus Images.” IEEE Transactions on Medical Imaging 36, no. 7 (2017): 1490–501. https://doi.org/10.1109/TMI.2017.2680942.
+
+Vasquez, Elena R., and Hiroshi Takeda. “A Distributed Algorithm for Clock Synchronization in Fault-Tolerant Sensor Networks.” IEEE Transactions on Parallel and Distributed Systems 11, no. 7 (2000): 689–703. https://doi.org/10.1109/71.877736.
+
+Zhao, Mei-Lin, and Tomasz Kowalczyk. “Thermochromic Vanadium Dioxide Thin Films for Passive Radiative Switching.” Applied Physics Letters 98, no. 14 (2011): 141905–8. https://doi.org/10.1063/1.3574012.

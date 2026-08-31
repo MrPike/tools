@@ -54,17 +54,24 @@
 <body>
 <header>
   <h1>tools</h1>
-  <span class="count">1 tool</span>
+  <span class="count">2 tools</span>
   <input id="search" type="search" placeholder="Search tools (&ldquo;/&rdquo; to focus)" aria-label="Search tools">
 </header>
 <main>
   <p class="intro">An assortment of handy little tools, built mostly with the help of LLMs.
   Everything runs client-side in your browser.</p>
   <div id="tagFilters" role="group" aria-label="Filter by tag"><button class="tag" data-tag="analysis">analysis</button>
+<button class="tag" data-tag="bibliography">bibliography</button>
 <button class="tag" data-tag="charts">charts</button>
 <button class="tag" data-tag="citations">citations</button>
+<button class="tag" data-tag="csl">csl</button>
 <button class="tag" data-tag="pdf">pdf</button></div>
   <ul class="tools" id="toolList">
+    <li class="tool" data-search="reference extractor extract the reference list from any academic pdf into structured csl-json, and preview it re-rendered in popular citation styles. runs entirely in the browser. pdf citations bibliography csl" data-tags="pdf citations bibliography csl">
+      <h2><a href="tool.html?tool=reference-extractor">Reference Extractor</a></h2>
+      <p class="desc">Extract the reference list from any academic PDF into structured CSL-JSON, and preview it re-rendered in popular citation styles. Runs entirely in the browser.</p>
+      <div class="meta"><span>2026-08-31</span><button class="tag" data-tag="pdf">pdf</button><button class="tag" data-tag="citations">citations</button><button class="tag" data-tag="bibliography">bibliography</button><button class="tag" data-tag="csl">csl</button></div>
+    </li>
     <li class="tool" data-search="citation counter per-page citation analysis for pdfs: counts numeric and author-year citations, charts density per page, and cross-checks the reference list. runs entirely in the browser. pdf citations analysis charts" data-tags="pdf citations analysis charts">
       <h2><a href="tool.html?tool=citation-counter">Citation Counter</a></h2>
       <p class="desc">Per-page citation analysis for PDFs: counts numeric and author-year citations, charts density per page, and cross-checks the reference list. Runs entirely in the browser.</p>

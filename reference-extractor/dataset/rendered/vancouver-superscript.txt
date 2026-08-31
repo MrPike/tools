@@ -1,0 +1,47 @@
+1. Hartwell DC, Ng PL. Adaptive filtering of seismic reflection profiles using wavelet packet decomposition. Journal of Applied Geophysics. 1998;41(2):113–29. doi:10.1016/S0926-9851(98)00021-4
+
+2. Kjærgaard SM, Baudouin A, Okafor C. Nitrogen retention in restored wetlands of the Kjærgaard river basin. Ecological Engineering. 1999;13(1–4):201–17. doi:10.1016/S0925-8574(99)00012-7
+
+3. Vasquez ER, Takeda H. A distributed algorithm for clock synchronization in fault-tolerant sensor networks. IEEE Transactions on Parallel and Distributed Systems. 2000;11(7):689–703. doi:10.1109/71.877736
+
+4. Almeida RJ. Principles of computational hydrology: models, methods, and uncertainty. 2nd ed. Oxford: Oxford University Press; 2001.
+
+5. Ostrowski M, Chen W, Adeyemi F, Rossi G, Nakamura K, Delacroix S, et al. Genome-wide association mapping of drought tolerance loci in spring wheat. Theoretical and Applied Genetics. 2002;104(6):987–1001. doi:10.1007/s00122-002-0914-6
+
+6. Moreau I, Petrov A. Institutional barriers to water-sharing agreements in transboundary basins. In: Salazar B, Kimura T, editors. Governance of shared water resources: comparative perspectives. Cheltenham: Edward Elgar; 2003. p. 145–72.
+
+7. Fitzgerald M, Duarte C, Hwang SJ. Low-power mesh routing for structural health monitoring of suspension bridges. In: Proceedings of the 9th ACM Conference on Embedded Networked Sensor Systems. New York: ACM Press; 2004. p. 312–25. doi:10.1145/1021446.1021478
+
+8. Novak K. Optical trapping dynamics of colloidal particles near dielectric interfaces [PhD thesis]. [Delft]: Delft University of Technology; 2005.
+
+9. Barakat L, Johansson E. Soil carbon turnover under contrasting tillage regimes in semi-arid cropland. Soil Biology and Biochemistry. 2006;38(9):2451–63.
+
+10. Martinez-Campos L, Whitfield SJ, Dubois R. Phonological priming effects in bilingual lexical access: evidence from eye tracking. Journal of Memory and Language. 2007;57(3):389–411. doi:10.1016/j.jml.2007.04.002
+
+11. Ashworth P, Lindgren F. Variational inference for sparse Gaussian process modulated point processes. arXiv preprint [Internet]. 2008. Located at: arXiv; 0806.2143. Available from: https://arxiv.org/abs/0806.2143
+
+12. Grant O. Global Data Commons Initiative [Internet]. 2009 [cited 2024 Nov 2]. Open data policies for national meteorological services: a comparative review. Available from: https://www.datacommons-initiative.org/reports/met-services-review
+
+13. International Consortium for Coastal Resilience. Guidelines for community-led coastal retreat: synthesis of the five-country pilot programme. Climate Risk Management. 2010;6:1–18. doi:10.1016/j.crm.2010.03.001
+
+14. Zhao ML, Kowalczyk T. Thermochromic vanadium dioxide thin films for passive radiative switching. Applied Physics Letters. 2011;98(14):141905–8. doi:10.1063/1.3574012
+
+15. Anderson RM, Silva JP. Civic participation and trust in municipal government: a longitudinal study of twelve mid-sized cities. Urban Affairs Review. 2012;48(5):655–84.
+
+16. Fernández-Ríos MJ, Łukaszewski P, Onyema A. Catalytic upcycling of polyethylene waste into liquid alkanes over ruthenium nanoparticles. ACS Catalysis. 2013;3(10):2287–96. doi:10.1021/cs400517k
+
+17. Bergeron C. Machine-learned potentials for reactive interfaces: promises and pitfalls. In: Goldman A, Stevenson M, editors. Frontiers in atomistic simulation: from electrons to engineering. Cham: Springer; 2014. p. 233–68. doi:10.1007/978-3-319-05274-4_9
+
+18. Haugen IB, Castellanos R. Migration timing of Arctic shorebirds responds unevenly to spring warming. Global Change Biology. 2015;21(8):3011–23. doi:10.1111/gcb.12904
+
+19. Okonkwo N, Petersen LH. The economics of urban green space: valuation methods and policy design. Abingdon: Routledge; 2016.
+
+20. Sharifi L, Novaković S, Park JH. Deep convolutional networks for automated detection of microaneurysms in retinal fundus images. IEEE Transactions on Medical Imaging. 2017;36(7):1490–501. doi:10.1109/TMI.2017.2680942
+
+21. Quispe-Mamani RE, Callaghan B. Language revitalization through community radio: evidence from three Andean regions. International Journal of the Sociology of Language. 2019;2019(256):55–79. doi:10.1515/ijsl-2018-2010
+
+22. Kaminski Y, Abebe ST, Fournier É. Edge computing architectures for real-time wildfire detection from drone imagery. Remote Sensing. 2021;13(14):2741–60. doi:10.3390/rs13142741
+
+23. Devereux A, Mbeki T. Federated fine-tuning of compact language models for low-resource translation. In: Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics. Stroudsburg, PA: Association for Computational Linguistics; 2023. p. 7821–36. doi:10.18653/v1/2023.acl-long.433
+
+24. Holmberg A, Reyes-García T, Singh H. Single-cell transcriptomic atlas of regenerating zebrafish myocardium at unprecedented resolution. Nature Communications. 2025;16:1187–203. doi:10.1038/s41467-025-56123-x

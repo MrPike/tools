@@ -44,3 +44,4 @@ and open `index.html`.
 ## Tools
 
 - [citation-counter](citation-counter/) — per-page citation analysis for PDFs
+- [reference-extractor](reference-extractor/) — PDF bibliography → CSL-JSON, with styled preview

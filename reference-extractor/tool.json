@@ -1,0 +1,6 @@
+{
+  "title": "Reference Extractor",
+  "description": "Extract the reference list from any academic PDF into structured CSL-JSON, and preview it re-rendered in popular citation styles. Runs entirely in the browser.",
+  "created": "2026-08-31",
+  "tags": ["pdf", "citations", "bibliography", "csl"]
+}

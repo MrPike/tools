@@ -1,0 +1,17 @@
+{
+  "name": "reference-extractor-dataset",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Synthetic dataset generation pipeline for the reference-extractor tool. Dev-only; not shipped.",
+  "type": "module",
+  "scripts": {
+    "generate": "node generate.mjs"
+  },
+  "dependencies": {
+    "citeproc": "^2.4",
+    "pdfkit": "^0.20"
+  },
+  "devDependencies": {
+    "pdfjs-dist": "3.11.174"
+  }
+}

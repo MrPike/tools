@@ -1,0 +1,47 @@
+(1) Hartwell, D. C.; Ng, P. L. Adaptive Filtering of Seismic Reflection Profiles Using Wavelet Packet Decomposition. Journal of Applied Geophysics 1998, 41 (2), 113–129. https://doi.org/10.1016/S0926-9851(98)00021-4
+
+(2) Kjærgaard, S. M.; Baudouin, A.; Okafor, C. Nitrogen Retention in Restored Wetlands of the Kjærgaard River Basin. Ecological Engineering 1999, 13 (1–4), 201–217. https://doi.org/10.1016/S0925-8574(99)00012-7
+
+(3) Vasquez, E. R.; Takeda, H. A Distributed Algorithm for Clock Synchronization in Fault-Tolerant Sensor Networks. IEEE Transactions on Parallel and Distributed Systems 2000, 11 (7), 689–703. https://doi.org/10.1109/71.877736
+
+(4) Almeida, R. J. Principles of Computational Hydrology: Models, Methods, and Uncertainty, 2nd ed.; Oxford University Press: Oxford, 2001.
+
+(5) Ostrowski, M.; Chen, W.; Adeyemi, F.; Rossi, G.; Nakamura, K.; Delacroix, S.; Ivanov, D.; Osei, K.; Lindqvist, A. Genome-Wide Association Mapping of Drought Tolerance Loci in Spring Wheat. Theoretical and Applied Genetics 2002, 104 (6), 987–1001. https://doi.org/10.1007/s00122-002-0914-6
+
+(6) Moreau, I.; Petrov, A. Institutional Barriers to Water-Sharing Agreements in Transboundary Basins. In Governance of shared water resources: comparative perspectives; Salazar, B., Kimura, T., Eds.; Edward Elgar: Cheltenham, 2003; pp 145–172.
+
+(7) Fitzgerald, M.; Duarte, C.; Hwang, S.-J. Low-Power Mesh Routing for Structural Health Monitoring of Suspension Bridges. In Proceedings of the 9th ACM Conference on Embedded Networked Sensor Systems; ACM Press: New York, 2004; pp 312–325. https://doi.org/10.1145/1021446.1021478
+
+(8) Novak, K. Optical Trapping Dynamics of Colloidal Particles near Dielectric Interfaces. PhD thesis, Delft University of Technology, 2005.
+
+(9) Barakat, L.; Johansson, E. Soil Carbon Turnover under Contrasting Tillage Regimes in Semi-Arid Cropland. Soil Biology and Biochemistry 2006, 38 (9), 2451–2463.
+
+(10) Martinez-Campos, L.; Whitfield, S. J.; Dubois, R. Phonological Priming Effects in Bilingual Lexical Access: Evidence from Eye Tracking. Journal of Memory and Language 2007, 57 (3), 389–411. https://doi.org/10.1016/j.jml.2007.04.002
+
+(11) Ashworth, P.; Lindgren, F. Variational Inference for Sparse Gaussian Process Modulated Point Processes. arXiv preprint. 2008. https://arxiv.org/abs/0806.2143
+
+(12) Grant, O. Open data policies for national meteorological services: a comparative review. Global Data Commons Initiative. https://www.datacommons-initiative.org/reports/met-services-review (accessed 2024-11-02)
+
+(13) International Consortium for Coastal Resilience. Guidelines for Community-Led Coastal Retreat: Synthesis of the Five-Country Pilot Programme. Climate Risk Management 2010, 6, 1–18. https://doi.org/10.1016/j.crm.2010.03.001
+
+(14) Zhao, M.-L.; Kowalczyk, T. Thermochromic Vanadium Dioxide Thin Films for Passive Radiative Switching. Applied Physics Letters 2011, 98 (14), 141905–141908. https://doi.org/10.1063/1.3574012
+
+(15) Anderson, R. M.; Silva, J. P. Civic Participation and Trust in Municipal Government: A Longitudinal Study of Twelve Mid-Sized Cities. Urban Affairs Review 2012, 48 (5), 655–684.
+
+(16) Fernández-Ríos, M. J.; Łukaszewski, P.; Onyema, A. Catalytic Upcycling of Polyethylene Waste into Liquid Alkanes over Ruthenium Nanoparticles. ACS Catalysis 2013, 3 (10), 2287–2296. https://doi.org/10.1021/cs400517k
+
+(17) Bergeron, C. Machine-Learned Potentials for Reactive Interfaces: Promises and Pitfalls. In Frontiers in atomistic simulation: from electrons to engineering; Goldman, A., Stevenson, M., Eds.; Springer: Cham, 2014; pp 233–268. https://doi.org/10.1007/978-3-319-05274-4_9
+
+(18) Haugen, I. B.; Castellanos, R. Migration Timing of Arctic Shorebirds Responds Unevenly to Spring Warming. Global Change Biology 2015, 21 (8), 3011–3023. https://doi.org/10.1111/gcb.12904
+
+(19) Okonkwo, N.; Petersen, L. H. The Economics of Urban Green Space: Valuation Methods and Policy Design; Routledge: Abingdon, 2016.
+
+(20) Sharifi, L.; Novaković, S.; Park, J.-H. Deep Convolutional Networks for Automated Detection of Microaneurysms in Retinal Fundus Images. IEEE Transactions on Medical Imaging 2017, 36 (7), 1490–1501. https://doi.org/10.1109/TMI.2017.2680942
+
+(21) Quispe-Mamani, R. E.; Callaghan, B. Language Revitalization through Community Radio: Evidence from Three Andean Regions. International Journal of the Sociology of Language 2019, 2019 (256), 55–79. https://doi.org/10.1515/ijsl-2018-2010
+
+(22) Kaminski, Y.; Abebe, S. T.; Fournier, É. Edge Computing Architectures for Real-Time Wildfire Detection from Drone Imagery. Remote Sensing 2021, 13 (14), 2741–2760. https://doi.org/10.3390/rs13142741
+
+(23) Devereux, A.; Mbeki, T. Federated Fine-Tuning of Compact Language Models for Low-Resource Translation. In Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics; Association for Computational Linguistics: Stroudsburg, PA, 2023; pp 7821–7836. https://doi.org/10.18653/v1/2023.acl-long.433
+
+(24) Holmberg, A.; Reyes-García, T.; Singh, H. Single-Cell Transcriptomic Atlas of Regenerating Zebrafish Myocardium at Unprecedented Resolution. Nature Communications 2025, 16, 1187–1203. https://doi.org/10.1038/s41467-025-56123-x
