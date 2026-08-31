@@ -2,7 +2,7 @@
 
 An assortment of handy and purely vibe-coded tools I've made that are probably of absolutely no use to anyone but myself. But just in case ...
 
-**Live site:** <https://mrpike.github.io/tools/>
+**Live site:** <https://tools.pike.im/>
 
 ## Layout
 

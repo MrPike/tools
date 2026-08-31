@@ -2,7 +2,7 @@
 
 Per-page citation analysis for PDFs, running entirely in the browser.
 
-**Live:** <https://mrpike.github.io/tools/citation-counter/>
+**Live:** <https://tools.pike.im/citation-counter/>
 
 ## What it does
 
