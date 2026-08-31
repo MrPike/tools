@@ -28,6 +28,10 @@ Each tool lives in its own subdirectory:
 
 `title` and `description` are required; `created` and `tags` are optional.
 
+`build.py` also generates `tool.html`, a navigator that wraps each tool in a
+frame with a bar for jumping back to the index or switching between tools
+(`tool.html?tool=<slug>`). Tools remain usable standalone at `<slug>/`.
+
 ## Adding a new tool
 
 1. Create a subdirectory with the three files above.

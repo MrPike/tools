@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
-"""Generate the root index.html listing every tool in this repo.
+"""Generate the root index.html and tool.html navigator for this repo.
 
-Scans top-level directories for a `tool.json` file and renders a static
-index page. No dependencies beyond the Python 3 standard library.
+Scans top-level directories for a `tool.json` file and renders:
+  - index.html  — listing page with search and tag filters
+  - tool.html   — iframe wrapper with a navigation bar, so you can browse
+                  tools without losing your way back (tool.html?tool=<slug>)
+
+No dependencies beyond the Python 3 standard library.
 
 Usage: python3 build.py
 """
@@ -13,9 +17,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-OUTPUT = ROOT / "index.html"
+INDEX_OUTPUT = ROOT / "index.html"
+TOOL_OUTPUT = ROOT / "tool.html"
 
-TEMPLATE = """<!DOCTYPE html>
+INDEX_TEMPLATE = """<!DOCTYPE html>
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
@@ -138,12 +143,106 @@ TEMPLATE = """<!DOCTYPE html>
 """
 
 ITEM_TEMPLATE = """    <li class="tool" data-search="{search}" data-tags="{tags_attr}">
-      <h2><a href="{slug}/">{title}</a></h2>
+      <h2><a href="tool.html?tool={slug}">{title}</a></h2>
       <p class="desc">{description}</p>
       <div class="meta">{created}{tags}</div>
     </li>"""
 
 TAG_FILTER_TEMPLATE = '<button class="tag" data-tag="{tag}">{tag}</button>'
+
+TOOL_TEMPLATE = """<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tools</title>
+<style>
+  :root {{
+    --bg:#fefefe; --surface:#ffffff; --ink:#0b0b0b; --ink-soft:#5a5866;
+    --hairline:#e6e4de; --accent:#5541EA;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }}
+  * {{ box-sizing:border-box; margin:0; padding:0 }}
+  html, body {{ height:100% }}
+  body {{ background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:14px; display:flex; flex-direction:column }}
+  nav {{
+    flex:none; display:flex; align-items:center; gap:16px;
+    padding:8px 16px; border-bottom:1px solid var(--hairline); background:var(--surface);
+  }}
+  nav a.home {{ color:var(--ink); text-decoration:none; font-weight:650; font-size:14px; white-space:nowrap }}
+  nav a.home:hover {{ color:var(--accent) }}
+  nav select {{
+    font:inherit; padding:4px 8px; border:1px solid var(--hairline); border-radius:6px;
+    background:var(--bg); color:var(--ink); max-width:50vw;
+  }}
+  nav select:focus {{ outline:none; border-color:var(--accent) }}
+  nav a.standalone {{
+    margin-left:auto; font-family:var(--mono); font-size:10px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-soft); text-decoration:none; white-space:nowrap;
+  }}
+  nav a.standalone:hover {{ color:var(--accent) }}
+  iframe {{ flex:1; width:100%; border:0; display:block }}
+  #missing {{ flex:1; display:none; padding:48px 24px; color:var(--ink-soft) }}
+  #missing code {{ font-family:var(--mono) }}
+</style>
+</head>
+<body>
+<nav>
+  <a class="home" href="./">&larr; tools</a>
+  <select id="picker" aria-label="Switch tool"></select>
+  <a class="standalone" id="standalone" href="./" target="_blank" rel="noopener">open standalone &#8599;</a>
+</nav>
+<iframe id="frame" title="Tool"></iframe>
+<p id="missing">Unknown tool. Pick one from the list, or go <a href="./">back to all tools</a>.</p>
+<script>
+var TOOLS = {tools_json};
+(function () {{
+  var picker = document.getElementById("picker");
+  var frame = document.getElementById("frame");
+  var standalone = document.getElementById("standalone");
+  var missing = document.getElementById("missing");
+
+  TOOLS.forEach(function (t) {{
+    var opt = document.createElement("option");
+    opt.value = t.slug;
+    opt.textContent = t.title;
+    picker.appendChild(opt);
+  }});
+
+  function currentSlug() {{
+    return new URLSearchParams(location.search).get("tool") || (TOOLS[0] && TOOLS[0].slug);
+  }}
+
+  function show(slug, replace) {{
+    var tool = null;
+    TOOLS.forEach(function (t) {{ if (t.slug === slug) tool = t; }});
+    if (!tool) {{
+      frame.style.display = "none";
+      missing.style.display = "block";
+      return;
+    }}
+    missing.style.display = "none";
+    frame.style.display = "block";
+    picker.value = tool.slug;
+    document.title = tool.title + " - tools";
+    standalone.href = tool.slug + "/";
+    if (frame.getAttribute("src") !== tool.slug + "/") {{
+      frame.setAttribute("src", tool.slug + "/");
+    }}
+    var url = "?tool=" + encodeURIComponent(tool.slug);
+    if (replace) {{ history.replaceState(null, "", url); }}
+    else {{ history.pushState(null, "", url); }}
+  }}
+
+  picker.addEventListener("change", function () {{ show(picker.value, false); }});
+  window.addEventListener("popstate", function () {{ show(currentSlug(), true); }});
+  show(currentSlug(), true);
+}})();
+</script>
+</body>
+</html>
+"""
 
 
 def load_tools():
@@ -197,16 +296,28 @@ def render_tag_filters(tools):
     )
 
 
+def render_tools_json(tools):
+    data = [{"slug": m["slug"], "title": m["title"]} for m in tools]
+    # Guard against "</script>" breaking out of the inline script block.
+    return json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+
+
 def main():
     tools = load_tools()
-    page = TEMPLATE.format(
-        count=len(tools),
-        s="" if len(tools) == 1 else "s",
-        tag_filters=render_tag_filters(tools),
-        items="\n".join(render_item(m) for m in tools),
+    INDEX_OUTPUT.write_text(
+        INDEX_TEMPLATE.format(
+            count=len(tools),
+            s="" if len(tools) == 1 else "s",
+            tag_filters=render_tag_filters(tools),
+            items="\n".join(render_item(m) for m in tools),
+        ),
+        encoding="utf-8",
     )
-    OUTPUT.write_text(page, encoding="utf-8")
-    print(f"wrote {OUTPUT.name} listing {len(tools)} tool(s)")
+    TOOL_OUTPUT.write_text(
+        TOOL_TEMPLATE.format(tools_json=render_tools_json(tools)),
+        encoding="utf-8",
+    )
+    print(f"wrote {INDEX_OUTPUT.name} and {TOOL_OUTPUT.name} listing {len(tools)} tool(s)")
 
 
 if __name__ == "__main__":

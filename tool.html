@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tools</title>
+<style>
+  :root {
+    --bg:#fefefe; --surface:#ffffff; --ink:#0b0b0b; --ink-soft:#5a5866;
+    --hairline:#e6e4de; --accent:#5541EA;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  * { box-sizing:border-box; margin:0; padding:0 }
+  html, body { height:100% }
+  body { background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:14px; display:flex; flex-direction:column }
+  nav {
+    flex:none; display:flex; align-items:center; gap:16px;
+    padding:8px 16px; border-bottom:1px solid var(--hairline); background:var(--surface);
+  }
+  nav a.home { color:var(--ink); text-decoration:none; font-weight:650; font-size:14px; white-space:nowrap }
+  nav a.home:hover { color:var(--accent) }
+  nav select {
+    font:inherit; padding:4px 8px; border:1px solid var(--hairline); border-radius:6px;
+    background:var(--bg); color:var(--ink); max-width:50vw;
+  }
+  nav select:focus { outline:none; border-color:var(--accent) }
+  nav a.standalone {
+    margin-left:auto; font-family:var(--mono); font-size:10px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-soft); text-decoration:none; white-space:nowrap;
+  }
+  nav a.standalone:hover { color:var(--accent) }
+  iframe { flex:1; width:100%; border:0; display:block }
+  #missing { flex:1; display:none; padding:48px 24px; color:var(--ink-soft) }
+  #missing code { font-family:var(--mono) }
+</style>
+</head>
+<body>
+<nav>
+  <a class="home" href="./">&larr; tools</a>
+  <select id="picker" aria-label="Switch tool"></select>
+  <a class="standalone" id="standalone" href="./" target="_blank" rel="noopener">open standalone &#8599;</a>
+</nav>
+<iframe id="frame" title="Tool"></iframe>
+<p id="missing">Unknown tool. Pick one from the list, or go <a href="./">back to all tools</a>.</p>
+<script>
+var TOOLS = [{"slug": "citation-counter", "title": "Citation Counter"}];
+(function () {
+  var picker = document.getElementById("picker");
+  var frame = document.getElementById("frame");
+  var standalone = document.getElementById("standalone");
+  var missing = document.getElementById("missing");
+
+  TOOLS.forEach(function (t) {
+    var opt = document.createElement("option");
+    opt.value = t.slug;
+    opt.textContent = t.title;
+    picker.appendChild(opt);
+  });
+
+  function currentSlug() {
+    return new URLSearchParams(location.search).get("tool") || (TOOLS[0] && TOOLS[0].slug);
+  }
+
+  function show(slug, replace) {
+    var tool = null;
+    TOOLS.forEach(function (t) { if (t.slug === slug) tool = t; });
+    if (!tool) {
+      frame.style.display = "none";
+      missing.style.display = "block";
+      return;
+    }
+    missing.style.display = "none";
+    frame.style.display = "block";
+    picker.value = tool.slug;
+    document.title = tool.title + " - tools";
+    standalone.href = tool.slug + "/";
+    if (frame.getAttribute("src") !== tool.slug + "/") {
+      frame.setAttribute("src", tool.slug + "/");
+    }
+    var url = "?tool=" + encodeURIComponent(tool.slug);
+    if (replace) { history.replaceState(null, "", url); }
+    else { history.pushState(null, "", url); }
+  }
+
+  picker.addEventListener("change", function () { show(picker.value, false); });
+  window.addEventListener("popstate", function () { show(currentSlug(), true); });
+  show(currentSlug(), true);
+})();
+</script>
+</body>
+</html>
