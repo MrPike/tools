@@ -31,12 +31,12 @@
   .status-pill.error .status-dot{background:var(--danger)}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
 
-  main{display:grid; grid-template-columns:308px 1fr; min-height:calc(100vh - 57px)}
-  @media (max-width:900px){ main{grid-template-columns:1fr} aside{border-right:none!important; border-bottom:1px solid var(--hairline)} }
+  main{display:grid; grid-template-columns:300px 1fr; min-height:calc(100vh - 57px); align-items:start}
+  @media (max-width:900px){ main{grid-template-columns:1fr} aside{border-right:none!important; border-bottom:1px solid var(--hairline); position:static; height:auto; max-height:none} }
 
-  aside{border-right:1px solid var(--hairline); background:var(--surface); padding:22px 22px 40px}
-  .section{margin-bottom:28px}
-  .section + .section{border-top:1px solid var(--hairline); padding-top:22px}
+  aside{border-right:1px solid var(--hairline); background:var(--surface); padding:18px 20px 28px; position:sticky; top:57px; height:calc(100vh - 57px); overflow:auto}
+  .section{margin-bottom:18px}
+  .section + .section{border-top:1px solid var(--hairline); padding-top:14px}
   .micro{font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:12px}
   .field{margin-bottom:14px}
   .field label{display:block; font-size:12px; font-weight:550; margin-bottom:5px}
@@ -54,13 +54,21 @@
   .check input:focus-visible + .ring{box-shadow:0 0 0 3px var(--accent-soft)}
   .check .txt{font-size:12.5px}
   .check .hint{display:block; font-size:11px; color:var(--ink-soft); margin-top:1px}
+  .check input:disabled + .ring{opacity:.35}
+  .check input:disabled ~ .txt{opacity:.45}
+  .fields-2col{display:grid; grid-template-columns:1fr 1fr; gap:0 12px}
+  .chartbox{position:relative}
+  .dl-hover{position:absolute; top:10px; right:10px; display:none; gap:6px; z-index:2}
+  .chartbox:hover .dl-hover, .chartbox:focus-within .dl-hover{display:flex}
+  .dl-hover button{font-family:var(--mono); font-size:9px; letter-spacing:.12em; text-transform:uppercase; padding:5px 9px; border-radius:3px; border:1px solid var(--hairline); background:rgba(255,255,255,.94); color:var(--ink-soft); cursor:pointer}
+  .dl-hover button:hover{border-color:var(--accent); color:var(--accent)}
   .swatches{display:grid; grid-template-columns:1fr 1fr; gap:12px}
   .swatch label{display:block; font-size:12px; font-weight:550; margin-bottom:5px}
   .swatch input[type=color]{width:100%; height:30px; border:1px solid var(--hairline); border-radius:3px; background:var(--bg); padding:2px; cursor:pointer}
 
   .content{padding:26px 28px 48px; min-width:0}
   .dropzone{
-    border:1.5px dashed #c9c6bd; border-radius:5px; padding:46px 24px; text-align:center;
+    border:1.5px dashed #c9c6bd; border-radius:5px; padding:34px 24px; text-align:center;
     cursor:pointer; transition:border-color .15s ease, background .15s ease; background:var(--surface);
   }
   .dropzone:hover{border-color:var(--accent)}
@@ -141,6 +149,9 @@
   <aside>
     <div class="section">
       <div class="micro">Citation styles</div>
+      <label class="check"><input type="checkbox" id="optAuto" checked><span class="ring"></span>
+        <span class="txt">Auto-detect<span class="hint">Chooses styles from the document; uncheck to override manually</span></span></label>
+      <div class="note" id="detectNote" style="margin:2px 0 8px"></div>
       <label class="check"><input type="checkbox" id="optNumeric" checked><span class="ring"></span>
         <span class="txt">Numeric brackets<span class="hint">[1], [1, 2], [4-7] (ranges expanded)</span></span></label>
       <label class="check"><input type="checkbox" id="optParen" checked><span class="ring"></span>
@@ -167,10 +178,12 @@
 
     <div class="section">
       <div class="micro">Figures &amp; axes</div>
-      <div class="field"><label for="lblTitle">Chart title</label><input type="text" id="lblTitle" value="Citation counts per page"></div>
-      <div class="field"><label for="lblX">X axis label</label><input type="text" id="lblX" value="Page"></div>
-      <div class="field"><label for="lblY1">Left axis label</label><input type="text" id="lblY1" value="Citations per page"></div>
-      <div class="field"><label for="lblY2">Right axis label</label><input type="text" id="lblY2" value="Cumulative citations"></div>
+      <div class="fields-2col">
+        <div class="field"><label for="lblTitle">Chart title</label><input type="text" id="lblTitle" value="Citation counts per page"></div>
+        <div class="field"><label for="lblX">X axis label</label><input type="text" id="lblX" value="Page"></div>
+        <div class="field"><label for="lblY1">Left axis label</label><input type="text" id="lblY1" value="Citations per page"></div>
+        <div class="field"><label for="lblY2">Right axis label</label><input type="text" id="lblY2" value="Cumulative citations"></div>
+      </div>
     </div>
   </aside>
 
@@ -200,11 +213,11 @@
         <div class="stat"><div class="num" id="stZero">0</div><div class="lbl">pages with none</div></div>
       </div>
       <div class="note" id="noteLine"></div>
-      <div class="panel" id="chartPanel" style="padding:18px 14px 8px"></div>
+      <div class="panel chartbox" id="chartPanel" style="padding:18px 14px 8px"></div>
 
       <div class="duo">
-        <div><div class="micro">Citation density by page</div><div id="densityPanel"></div></div>
-        <div><div class="micro">Cited publication years</div><div id="yearsPanel"></div></div>
+        <div class="chartbox"><div class="micro">Citation density by page</div><div id="densityPanel"></div></div>
+        <div class="chartbox"><div class="micro">Cited publication years</div><div id="yearsPanel"></div></div>
       </div>
 
       <div class="panel" id="chapterPanel"></div>
@@ -344,6 +357,7 @@ function countParen(lineObjs, pageW, cited){
     while((m = PAREN_RE.exec(line.text)) !== null){
       var prefix = line.text.slice(0, m.index);
       if(!prefix.trim()) continue;                       /* list marker at line start */
+      if(/(?:\p{L}|\p{N})$/u.test(prefix)) continue;     /* attached to a word/symbol: F(3,36), not a citation */
       var nums = parseNumGroup(m[1]);
       if(nums.length === 1 && nums[0] >= 1900 && nums[0] <= 2099
          && /[A-Z][A-Za-z\u00C0-\u00FF'\-]+\s*$/.test(prefix)) continue; /* narrative year */
@@ -366,9 +380,19 @@ function bodyHeight(items){
   hs.sort(function(a,b){return a-b;});
   return hs.length ? hs[Math.floor(hs.length/2)] : 0;
 }
+function superAdjacent(it, letterItems, bh){
+  for(var j=0;j<letterItems.length;j++){
+    var o = letterItems[j];
+    if(Math.abs(o.y - it.y) > 3) continue;
+    var gap = it.x - (o.x + (o.width || 0));
+    if(gap >= -1 && gap < Math.max(6, 0.8 * bh)) return true;
+  }
+  return false;
+}
 function countSuper(items, pageH, cited){
   var bh = bodyHeight(items);
   if(!bh || !pageH) return 0;
+  var letterItems = items.filter(function(o){ return /[A-Za-z]/.test(o.str); });
   var total = 0, i, it, s;
   for(i=0;i<items.length;i++){
     it = items[i]; s = it.str.trim();
@@ -376,6 +400,7 @@ function countSuper(items, pageH, cited){
     if(!/^[\d\s,;\-\u2013()]+$/.test(s)) continue;
     if(it.height > 0.8 * bh || it.height < 0.3 * bh) continue;
     if(it.y < 0.10 * pageH || it.y > 0.94 * pageH) continue;
+    if(!superAdjacent(it, letterItems, bh)) continue; /* not after a word: margin line number, page number, lone equation number */
     var nums = parseNumGroup(s.replace(/[()]/g, " "));
     total += nums.length;
     nums.forEach(function(n){ cited.add(n); });
@@ -422,26 +447,29 @@ function pageLines(items){
     var its = groups[yy].sort(function(a,b){return a.transform[4]-b.transform[4];});
     return {
       text: its.map(function(o){return o.str;}).join("").trim(),
+      y: yy,
       items: its.map(function(o){return {str:o.str, x:o.transform[4], width:o.width || 0};})
     };
   });
 }
-function isRefsStart(lines){
+/* index of the standalone "References"/"Bibliography" heading line, or -1.
+   Scans the whole page: the heading often starts mid-page, not at the top. */
+function refsLineIndex(lines){
   for(var i=0;i<lines.length;i++){
-    if(lines[i]) return REFS_HEADING_RE.test(lines[i]);
+    if(lines[i] && REFS_HEADING_RE.test(lines[i])) return i;
   }
-  return false;
+  return -1;
 }
 
 /* ================= reference list parsing & cross-check ================= */
 
 function parseReferences(pageData, startIdx){
   var lines = [], i, j;
+  var startCut = refsLineIndex(pageData[startIdx].lines);
   for(i=startIdx;i<pageData.length;i++){
     for(j=0;j<pageData[i].lines.length;j++){
-      var L = pageData[i].lines[j];
-      if(i===startIdx && REFS_HEADING_RE.test(L)) continue;
-      lines.push(L);
+      if(i===startIdx && j <= startCut) continue; /* skip body text above the heading */
+      lines.push(pageData[i].lines[j]);
     }
   }
   var nums = new Set(), numEntries = [], ayEntries = [], cur = null, m;
@@ -514,6 +542,7 @@ function handleFile(file){
   file.arrayBuffer().then(function(buf){ return extractPages(buf); })
     .then(function(pages){
       pageData = pages;
+      detectionStale = true;
       setStatus("live", "counting");
       recount();
       setStatus("done", "done");
@@ -541,7 +570,7 @@ function extractPages(buf){
       return doc.getPage(i).then(function(page){
         return page.getTextContent().then(function(tc){
           var items = tc.items.map(function(it){
-            return {str: it.str, height: it.height || 0, y: it.transform[5], x: it.transform[4]};
+            return {str: it.str, height: it.height || 0, y: it.transform[5], x: it.transform[4], width: it.width || 0};
           });
           var lineObjs = pageLines(tc.items);
           var text = tc.items.map(function(it){return it.str;}).join("\n");
@@ -565,10 +594,70 @@ function extractPages(buf){
   });
 }
 
+/* ================= style auto-detection ================= */
+
+var detectionStale = true;   /* re-run detection when a new file is loaded */
+var STYLE_IDS = ["optNumeric","optParen","optSuper","optAuthorYear"];
+var STYLE_NAMES = {
+  optNumeric:"numeric brackets", optParen:"parenthetical numbers",
+  optSuper:"superscripts", optAuthorYear:"author\u2013year"
+};
+
+/* Count every style across the document body (stopping at the reference
+   list so it doesn't skew the result) and decide which styles to enable. */
+function detectStyles(){
+  var d = {optNumeric:0, optParen:0, optSuper:0, optAuthorYear:0};
+  var cited = new Set(), years = {};
+  for(var i=0;i<pageData.length;i++){
+    if(refsLineIndex(pageData[i].lines) >= 0) break;
+    var pg = pageData[i];
+    d.optNumeric += countBracket(pg.text, cited);
+    d.optParen += countParen(pg.lineObjs, pg.pageW, cited);
+    d.optSuper += countSuper(pg.items, pg.pageH, cited);
+    d.optAuthorYear += countAuthorYear(pg.text, years, cited);
+  }
+  var maxC = Math.max(d.optNumeric, d.optParen, d.optSuper, d.optAuthorYear);
+  var on = {
+    optNumeric: d.optNumeric >= 3 && d.optNumeric >= 0.05 * maxC,
+    optParen: d.optParen >= 3 && d.optParen >= 0.05 * maxC,
+    /* superscripts only when they clearly dominate; brackets win ties */
+    optSuper: d.optSuper >= 3 && d.optSuper > d.optNumeric + d.optParen,
+    optAuthorYear: d.optAuthorYear >= 3 && d.optAuthorYear >= 0.05 * maxC
+  };
+  if(!on.optNumeric && !on.optParen && !on.optSuper && !on.optAuthorYear){
+    if(maxC > 0){
+      var best = "optNumeric";
+      STYLE_IDS.forEach(function(id){ if(d[id] > d[best]) best = id; });
+      on[best] = true;
+    } else {
+      on.optNumeric = true; on.optAuthorYear = true;
+    }
+  }
+  STYLE_IDS.forEach(function(id){ $(id).checked = on[id]; });
+  var picked = STYLE_IDS.filter(function(id){ return on[id]; })
+                        .map(function(id){ return STYLE_NAMES[id]; });
+  $("detectNote").textContent = maxC
+    ? "auto-detected: " + picked.join(" + ")
+    : "no citations found; defaulting to " + picked.join(" + ");
+}
+
+/* While auto-detect is on, the style checkboxes mirror the detection and
+   stay disabled; unchecking auto-detect hands control to the user. */
+function updateStyleLock(){
+  var auto = $("optAuto").checked;
+  STYLE_IDS.forEach(function(id){ $(id).disabled = auto; });
+  if(!auto) $("detectNote").textContent = "";
+}
+
 /* ================= counting + all panels ================= */
 
 function recount(){
   if(!pageData) return;
+  updateStyleLock();
+  if($("optAuto").checked && detectionStale){
+    detectStyles();
+    detectionStale = false;
+  }
   var useNum = $("optNumeric").checked, usePar = $("optParen").checked;
   var useSup = $("optSuper").checked, useAY = $("optAuthorYear").checked;
   var excl = $("optExcludeRefs").checked;
@@ -577,16 +666,29 @@ function recount(){
   var citedNum = new Set(), citedAY = new Set(), years = {};
 
   for(var i=0;i<pageData.length;i++){
-    if(isRefsStart(pageData[i].lines)){
-      if(refsIdx < 0) refsIdx = i;
-      if(excl){ stopped = i+1; break; }
-    }
     var pg = pageData[i];
-    var b = useNum ? countBracket(pg.text, citedNum) : 0;
-    var p = usePar ? countParen(pg.lineObjs, pg.pageW, citedNum) : 0;
-    var s = useSup ? countSuper(pg.items, pg.pageH, citedNum) : 0;
-    var a = useAY ? countAuthorYear(pg.text, years, citedAY) : 0;
+    var rIdx = refsLineIndex(pg.lines);
+    var stopHere = false;
+    if(rIdx >= 0){
+      if(refsIdx < 0) refsIdx = i;
+      if(excl) stopHere = true;
+    }
+    if(stopHere && rIdx === 0){ stopped = i+1; break; } /* heading at top of page */
+    var text = pg.text, lineObjs = pg.lineObjs, items = pg.items;
+    if(stopHere){
+      /* references begin mid-page: count only what comes before the heading */
+      stopped = i+1;
+      text = pg.lines.slice(0, rIdx).join("\n");
+      lineObjs = pg.lineObjs.slice(0, rIdx);
+      var cutY = pg.lineObjs[rIdx].y;
+      items = pg.items.filter(function(it){ return it.y > cutY; });
+    }
+    var b = useNum ? countBracket(text, citedNum) : 0;
+    var p = usePar ? countParen(lineObjs, pg.pageW, citedNum) : 0;
+    var s = useSup ? countSuper(items, pg.pageH, citedNum) : 0;
+    var a = useAY ? countAuthorYear(text, years, citedAY) : 0;
     rows.push({page:i+1, words:pg.words, bracket:b, paren:p, sup:s, ay:a, total:b+p+s+a});
+    if(stopHere) break;
   }
 
   lastRows = rows; lastStoppedAt = stopped;
@@ -603,8 +705,11 @@ function recount(){
   renderZero(rows);
   $("results").style.display = "block";
 }
-["optNumeric","optParen","optSuper","optAuthorYear","optExcludeRefs"].forEach(function(id){
-  $(id).addEventListener("change", recount);
+["optAuto","optNumeric","optParen","optSuper","optAuthorYear","optExcludeRefs"].forEach(function(id){
+  $(id).addEventListener("change", function(){
+    if(id === "optAuto" && $("optAuto").checked) detectionStale = true;
+    recount();
+  });
 });
 ["optBars","optLine","colBars","colLine","lblTitle","lblX","lblY1","lblY2"].forEach(function(id){
   $(id).addEventListener("input", function(){ renderChart(); renderDensity(lastRows); });
@@ -731,6 +836,7 @@ function renderChart(){
 
   s.push('</svg>');
   panel.innerHTML = s.join("");
+  attachChartDl(panel, "citation_counts");
 }
 
 /* ================= small bar chart (density / years) ================= */
@@ -772,15 +878,18 @@ function renderDensity(rows){
   var labels = rows.map(function(r){ return String(r.page); });
   renderBars($("densityPanel"), vals, labels, $("colBars").value,
              function(v){ return (Math.round(v*10)/10) + " per 1k words"; });
+  attachChartDl($("densityPanel").closest(".chartbox"), "citation_density");
 }
 function renderYears(years){
   var ys = Object.keys(years).sort();
   if(!ys.length){
     $("yearsPanel").innerHTML = '<p class="val">No author\u2013year citations detected, so no year distribution to show.</p>';
+    attachChartDl($("yearsPanel").closest(".chartbox"), "cited_years");
     return;
   }
   renderBars($("yearsPanel"), ys.map(function(y){return years[y];}), ys, "#EC4F22",
              function(v){ return v + (v===1?" citation":" citations"); });
+  attachChartDl($("yearsPanel").closest(".chartbox"), "cited_years");
 }
 
 /* ================= chapters / zero pages / cross-check ================= */
@@ -871,34 +980,58 @@ function renderXref(){
 
 /* ================= downloads ================= */
 
-function svgNode(){ return $("chartPanel").querySelector("svg"); }
 function download(uri, name){
   var a = document.createElement("a");
   a.href = uri; a.download = name;
   document.body.appendChild(a); a.click(); a.remove();
 }
-$("dlPng").addEventListener("click", function(){
-  var svg = svgNode(); if(!svg) return;
+function saveSvg(svg, name){
+  if(!svg) return;
+  var xml = new XMLSerializer().serializeToString(svg);
+  download(URL.createObjectURL(new Blob([xml], {type:"image/svg+xml;charset=utf-8"})), name + ".svg");
+}
+function savePng(svg, name){
+  if(!svg) return;
   var xml = new XMLSerializer().serializeToString(svg);
   var url = URL.createObjectURL(new Blob([xml], {type:"image/svg+xml;charset=utf-8"}));
+  var vb = (svg.getAttribute("viewBox") || "0 0 1000 520").split(/\s+/).map(Number);
   var img = new Image();
   img.onload = function(){
     var scale = 2;
     var cv = document.createElement("canvas");
-    cv.width = 1000*scale; cv.height = 520*scale;
+    cv.width = vb[2]*scale; cv.height = vb[3]*scale;
     var ctx = cv.getContext("2d");
     ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,cv.width,cv.height);
     ctx.drawImage(img, 0, 0, cv.width, cv.height);
     URL.revokeObjectURL(url);
-    download(cv.toDataURL("image/png"), "citation_counts.png");
+    download(cv.toDataURL("image/png"), name + ".png");
   };
   img.onerror = function(){ showError("PNG export failed in this browser; try the SVG download instead."); };
   img.src = url;
+}
+
+/* small PNG/SVG buttons that appear when hovering a chart container;
+   re-attached after each render since the svg gets rebuilt */
+function attachChartDl(box, name){
+  var old = box.querySelector(".dl-hover");
+  if(old) old.remove();
+  if(!box.querySelector("svg")) return;
+  var bar = document.createElement("div");
+  bar.className = "dl-hover";
+  [["PNG", savePng], ["SVG", saveSvg]].forEach(function(pair){
+    var b = document.createElement("button");
+    b.type = "button"; b.textContent = pair[0];
+    b.addEventListener("click", function(){ pair[1](box.querySelector("svg"), name); });
+    bar.appendChild(b);
+  });
+  box.appendChild(bar);
+}
+
+$("dlPng").addEventListener("click", function(){
+  savePng($("chartPanel").querySelector("svg"), "citation_counts");
 });
 $("dlSvg").addEventListener("click", function(){
-  var svg = svgNode(); if(!svg) return;
-  var xml = new XMLSerializer().serializeToString(svg);
-  download(URL.createObjectURL(new Blob([xml], {type:"image/svg+xml;charset=utf-8"})), "citation_counts.svg");
+  saveSvg($("chartPanel").querySelector("svg"), "citation_counts");
 });
 $("dlCsv").addEventListener("click", function(){
   if(!lastRows) return;
@@ -916,6 +1049,7 @@ function showError(msg){ $("errorText").textContent = msg; $("errorCard").style.
 function hideError(){ $("errorCard").style.display = "none"; }
 
 setStatus("", "idle");
+updateStyleLock();
 })();
 </script>
 </body>
