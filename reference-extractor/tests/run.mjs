@@ -228,6 +228,61 @@ function runEdgeFixtures() {
     results.push("letter-spaced heading: OK");
   }
 
+  // 9. ACM-format entries: given-first authors, ". YYYY. " year marker,
+  //    unquoted titles, [n] brackets. Covers journal+DOI, book (Vol.),
+  //    chapter (In Proceedings), org author, and et al.
+  {
+    const acmText = "References\n\n" +
+      "[1] Kumaripaba Athukorala, Dorota Głowacka, Giulio Jacucci, Antti Oulasvirta, and Jilles Vreeken. 2016. Is exploratory search different? A comparison of information search behavior for exploratory and lookup tasks. Journal of the Association for Information Science and Technology 67, 11 (2016), 2635–2651. https://doi.org/10.1002/asi.20103\n\n" +
+      "[2] Virgil L Anderson and Robert A McLean. 1974. Design of experiments: a realistic approach. Vol. 5. CRC Press.\n\n" +
+      "[3] Ingmar Weber and Carlos Castillo. 2010. The demographics of web search. In Proceedings of the 33rd international ACM SIGIR conference on Research and development in information retrieval. 523–530.\n\n" +
+      "[4] Google. 2026. Personalization and Google Search results. https://support.google.com/websearch/answer/12410098\n\n" +
+      "[5] Diane Kelly et al. 2009. Methods for evaluating interactive information retrieval systems with users. Foundations and Trends in Information Retrieval 3, 1–2 (2009), 1–224.";
+    const r = RefParser.parseText(acmText);
+    assert(r.style === "numbered (ACM)", "acm: style detected, got " + r.style);
+    assert(r.refs.length === 5, "acm: 5 entries, got " + r.refs.length);
+    const e1 = r.refs[0];
+    assert(e1.csl.author && e1.csl.author.length === 5 &&
+      e1.csl.author[0].family === "Athukorala" && e1.csl.author[4].family === "Vreeken",
+      "acm[1]: 5 authors Athukorala..Vreeken, got " + JSON.stringify(e1.csl.author));
+    assert(yearOf(e1.csl) === 2016, "acm[1]: year 2016, got " + yearOf(e1.csl));
+    assert((e1.csl.title || "").indexOf("Is exploratory search different") === 0,
+      "acm[1]: title, got " + e1.csl.title);
+    assert(e1.csl.DOI === "10.1002/asi.20103", "acm[1]: DOI, got " + e1.csl.DOI);
+    assert(e1.csl.volume === "67" && e1.csl.issue === "11" && e1.csl.page === "2635-2651",
+      "acm[1]: vol/issue/pages, got " + e1.csl.volume + "/" + e1.csl.issue + "/" + e1.csl.page);
+    const e2 = r.refs[1];
+    assert(e2.csl.author.length === 2 && e2.csl.author[0].family === "Anderson" &&
+      e2.csl.author[1].family === "McLean", "acm[2]: 2 authors Anderson/McLean, got " + JSON.stringify(e2.csl.author));
+    assert(yearOf(e2.csl) === 1974, "acm[2]: year 1974, got " + yearOf(e2.csl));
+    assert((e2.csl.title || "").toLowerCase().indexOf("design of experiments") === 0,
+      "acm[2]: title, got " + e2.csl.title);
+    assert(e2.csl.volume === "5" && e2.csl.publisher === "CRC Press" && e2.csl.type === "book",
+      "acm[2]: book vol/publisher/type, got " + e2.csl.volume + "/" + e2.csl.publisher + "/" + e2.csl.type);
+    const e3 = r.refs[2];
+    assert(e3.csl.author.length === 2 && e3.csl.author[1].family === "Castillo",
+      "acm[3]: 2 authors ..Castillo, got " + JSON.stringify(e3.csl.author));
+    assert(e3.csl.type === "paper-conference", "acm[3]: type paper-conference, got " + e3.csl.type);
+    assert((e3.csl["container-title"] || "").indexOf("Proceedings of") === 0,
+      "acm[3]: container, got " + e3.csl["container-title"]);
+    assert(e3.csl.page === "523-530", "acm[3]: pages, got " + e3.csl.page);
+    const e4 = r.refs[3];
+    assert(e4.csl.author && e4.csl.author[0].literal === "Google",
+      "acm[4]: org author Google, got " + JSON.stringify(e4.csl.author));
+    assert(yearOf(e4.csl) === 2026, "acm[4]: year 2026, got " + yearOf(e4.csl));
+    assert(e4.csl.type === "webpage", "acm[4]: type webpage, got " + e4.csl.type);
+    assert(e4.csl.URL && e4.csl.URL.indexOf("support.google.com") >= 0,
+      "acm[4]: URL, got " + e4.csl.URL);
+    const e5 = r.refs[4];
+    assert(e5.csl.author && e5.csl.author[0].family === "Kelly",
+      "acm[5]: Kelly, got " + JSON.stringify(e5.csl.author));
+    assert(e5.issues.some(s => /et al/i.test(s)),
+      "acm[5]: et al flagged, got " + e5.issues.join(";"));
+    assert(e5.csl.volume === "3" && e5.csl.issue === "1-2",
+      "acm[5]: vol/issue, got " + e5.csl.volume + "/" + e5.csl.issue);
+    results.push("ACM-format entries: OK (journal+DOI, book Vol., In Proceedings, org, et al.)");
+  }
+
   return results;
 }
 

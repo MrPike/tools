@@ -150,6 +150,8 @@
   function extractIdentifiers(text) {
     var doi = null, url = null, arxiv = null, isbn = null;
     var rest = text;
+    // rejoin a DOI broken by a stray space inside the token ("10. 1007/...")
+    rest = rest.replace(/\b10\.\s+(\d{4,9}\/)/g, "10.$1");
 
     // DOI (with optional "doi:" prefix) — extracted first so the bare 10.xxxx
     // token is removed before URL extraction sees a doi.org link.
@@ -198,7 +200,8 @@
       .replace(/\(accessed\s+\d{4}-\d{2}-\d{2}\)/gi, " ")
       .replace(/\(Accessed:?\s*[A-Z][a-z]+\.?\s*\d{1,2},?\s*\d{4}\)/g, " ")
       .replace(/\[cited\s+\d{4}[^\]]*\]/g, " ")
-      .replace(/\bcited\s+\d{4}\s+[A-Z][a-z]+\s+\d{1,2}/g, " ");
+      .replace(/\bcited\s+\d{4}\s+[A-Z][a-z]+\s+\d{1,2}/g, " ")
+      .replace(/Accessed:?\s*(\d{4})-(\d{2})-(\d{2})/gi, " ");
   }
 
   /* ===== year extraction (position-aware scoring) ===== */
@@ -512,6 +515,51 @@
     return authors;
   }
 
+  // ACM reference format: given-first ("Given M. Family"), comma-separated,
+  // "and" before the last author; "et al." supported. The block passed here is
+  // the name list only (the caller cuts at ". YYYY."). Authors are personal
+  // given-first names by default; a single-token (or all-caps / org-keyword)
+  // block is an organisation / handle literal.
+  function parseAcmAuthors(block) {
+    var b = trim(block).replace(/\.+$/, "");
+    var etal = false;
+    var et = b.match(/,\s*et al\.?|\bet al\.?/);
+    if (et) { etal = true; b = trim(b.slice(0, et.index)); }
+    if (!b) { var e0 = []; if (etal) e0.etal = true; return e0; }
+    var SUFFIX = /^(.+?)\s+(Jr\.?|Sr\.?|II|III|IV)$/i;
+    var ORGKW = /\b(Inc|Ltd|LLC|Corp|Corporation|Company|Universit[a-z]+|Institute|Association|Academy|Society|Foundation|Organiz|Agency|Department|Ministry|College|Committee|Council|Government|WHO|UNESCO|IEEE|ACM)\b/i;
+    function oneName(s) {
+      s = trim(s).replace(/[,;]+$/, "").replace(/^and\s+/i, "").replace(/^&\s*/, "");
+      if (!s) return null;
+      if (!/\s/.test(s)) return { literal: s };                       // single token
+      if (ORGKW.test(s) || /^[A-Z][A-Z0-9 &.\-]{3,}$/.test(s)) return { literal: s };
+      var suf = s.match(SUFFIX);
+      if (suf) {
+        var nm = splitGivenFirst(suf[1]);
+        if (nm) { nm.family = nm.family + " " + suf[2].replace(/\.$/, ""); return nm; }
+      }
+      var nm2 = splitGivenFirst(s);
+      if (nm2) return nm2;
+      return { literal: s };
+    }
+    // split into author chunks: commas first, then an "and" inside a chunk
+    var parts = b.split(/\s*,\s*/);
+    var authors = [];
+    for (var i = 0; i < parts.length; i++) {
+      var p = trim(parts[i]).replace(/^and\s+/i, "").replace(/^&\s*/, "");
+      if (!p) continue;
+      var sub = p.split(/\s+and\s+/i);
+      for (var k = 0; k < sub.length; k++) {
+        var s = trim(sub[k]);
+        if (!s) continue;
+        var nm3 = oneName(s);
+        if (nm3) authors.push(nm3);
+      }
+    }
+    if (etal) authors.etal = true;
+    return authors;
+  }
+
   /* ===== volume / issue / page extraction ===== */
   function parseVolIssuePages(text) {
     var out = {};
@@ -551,7 +599,19 @@
       else if (/^\s*\(\d+\)/.test(b)) paren++;
       else if (/^\s*\d+\.\s/.test(b)) numbered++;
     }
-    if (bracket > n / 2) return "ieee";
+    if (bracket > n / 2) {
+      // ACM reference format: given-first authors and a standalone ". YYYY. "
+      // year marker right after the name list, with unquoted titles. IEEE uses
+      // the same [n] markers but quotes its titles and puts the year at the end,
+      // so it never produces the ". YYYY. " author-block marker.
+      var acm = 0, quotes = 0;
+      for (var a = 0; a < n; a++) {
+        if (/\. (?:19|20)\d{2}\. /.test(blocks[a])) acm++;
+        if (/["\u201C\u201D]/.test(blocks[a])) quotes++;
+      }
+      if (acm > n / 2 && quotes <= n / 4) return "acm";
+      return "ieee";
+    }
     if (paren > n / 2) return "acs";
     if (numbered > n / 2) {
       // vancouver vs nature: vancouver uses "year;vol", nature uses "(year)" & "&"
@@ -599,6 +659,7 @@
   var STYLE_LABEL = {
     ieee: "numbered (bracketed)",
     acs: "numbered (parenthesized)",
+    acm: "numbered (ACM)",
     vancouver: "numbered",
     nature: "numbered",
     apa: "author-year",
@@ -1270,6 +1331,146 @@
     return buildEntry(text, csl, issues);
   }
 
+  /* ---- ACM (numbered, given-first author-year-ish) ----
+   * "[n]Given1 M. Last1, ..., and FirstN M. LastN. Year. Title. Container
+   * Volume, Issue (Year), pages. https://doi.org/..." — books carry a
+   * publisher (often "Vol. N. Publisher"), chapters start "In Proceedings".
+   */
+  // Parse the tail after the title: container + vol(issue) + (year) + pages,
+  // or a book / chapter / proceedings / arXiv / webpage form.
+  function acmRemainder(rem, csl) {
+    rem = trim(rem || "").replace(/\.+$/, "");
+    if (!rem) return;
+    var cm = rem.match(/Chapter\s+(\d{1,4})/i);
+    if (cm) csl.chapter = cm[1];
+    var vm = rem.match(/Vol\.\s*(\d{1,4})/i);
+    if (vm) csl.volume = vm[1];
+    var pm = rem.match(/(\d{1,6})\s*[\u2013-]\s*(\d{1,6})/);
+    if (pm) {
+      csl.page = pm[1] + "-" + pm[2];
+      var before = rem.slice(0, pm.index).replace(/[,:.\s]+$/, "");
+      if (before && !/Vol\.|Chapter/i.test(before)) csl.publisher = trim(before);
+      return;
+    }
+    var ps = rem.match(/[,:]\s*(\d{1,6})\.?\s*$/);
+    if (ps) csl.page = ps[1];
+  }
+
+  function extractAcmTail(rest, csl) {
+    rest = trim(rest || "").replace(/\.+$/, "");
+    if (!rest) return;
+
+    // chapter / proceedings: "In Container[. ...]"
+    if (/^In\s+/i.test(rest)) {
+      // chapter with editors: "In Container, Editors (Eds.). Series, Vol. N. Publisher, pages"
+      // (match the editors span before the generic ". " split, since an editor
+      // initial like "Peter A." would otherwise break the container name)
+      var edM = rest.match(/^In\s+(.+?),\s+(.+?)\s+\((?:Eds?\.?)\)\.\s+(.*)$/i);
+      if (edM) {
+        csl.type = "chapter";
+        csl["container-title"] = stripTrailingDot(trim(edM[1]));
+        csl.editor = parseAcmAuthors(edM[2]);
+        acmRemainder(edM[3], csl);
+        return;
+      }
+      var inM = rest.match(/^In\s+(.+?)\.\s+(.*)$/i);
+      if (inM) {
+        var cont = trim(inM[1]);
+        csl["container-title"] = stripTrailingDot(trim(cont));
+        csl.type = /^Proceedings of\b/i.test(cont) ? "paper-conference" : "chapter";
+        acmRemainder(inM[2], csl);
+      } else {
+        csl["container-title"] = stripTrailingDot(trim(rest));
+        csl.type = "chapter";
+      }
+      return;
+    }
+
+    // arXiv preprint
+    if (/^arxiv preprint/i.test(rest)) {
+      csl.type = "article";
+      csl["container-title"] = "arXiv preprint";
+      return;
+    }
+
+    // book-chapter: "Publisher, Chapter N, pages"
+    var chM = rest.match(/^(.+?),\s*Chapter\s+(\d{1,4})\s*,\s*(\d{1,6})\s*[\u2013-]\s*(\d{1,6})/i);
+    if (chM) { csl.type = "chapter"; csl.publisher = stripTrailingDot(trim(chM[1])); csl.chapter = chM[2]; csl.page = chM[3] + "-" + chM[4]; return; }
+
+    // journal: container + vol, issue (year), pages
+    var jm = rest.match(/^(.+?)\s+(\d{1,4}),\s*(\d{1,4}(?:[\u2013-]\d{1,4})?)\s*\((\d{4})\)\s*,\s*(\d{1,6})\s*[\u2013-]\s*(\d{1,6})/);
+    if (jm) { csl["container-title"] = stripTrailingDot(trim(jm[1])); csl.volume = jm[2]; csl.issue = jm[3].replace(/\u2013/g, "-"); csl.page = jm[5] + "-" + jm[6]; return; }
+    var jm2 = rest.match(/^(.+?)\s+(\d{1,4})\s*\((\d{4})\)\s*,\s*(\d{1,6})\s*[\u2013-]\s*(\d{1,6})/);
+    if (jm2) { csl["container-title"] = stripTrailingDot(trim(jm2[1])); csl.volume = jm2[2]; csl.page = jm2[4] + "-" + jm2[5]; return; }
+    var jm3 = rest.match(/^(.+?)\s+(\d{1,4}),\s*(\d{1,4}(?:[\u2013-]\d{1,4})?)\s*\((\d{4})\)\s*,\s*(\d{1,6})/);
+    if (jm3) { csl["container-title"] = stripTrailingDot(trim(jm3[1])); csl.volume = jm3[2]; csl.issue = jm3[3].replace(/\u2013/g, "-"); csl.page = jm3[5]; return; }
+    var jm4 = rest.match(/^(.+?)\s+(\d{1,4})\s*\((\d{4})\)\s*,\s*(\d{1,6})/);
+    if (jm4) { csl["container-title"] = stripTrailingDot(trim(jm4[1])); csl.volume = jm4[2]; csl.page = jm4[4]; return; }
+    var jm5 = rest.match(/^(.+?)\s+\((\d{4})\)\./);
+    if (jm5) { csl["container-title"] = stripTrailingDot(trim(jm5[1])); return; }
+
+    // book: "Vol. N. Publisher" / "Number N. Publisher"
+    var vm = rest.match(/^Vol\.\s*(\d{1,4})\.\s*(.+)$/i);
+    if (vm) { csl.volume = vm[1]; csl.publisher = stripTrailingDot(trim(vm[2])); csl.type = "book"; return; }
+    var nm = rest.match(/^Number\s+(\d{1,4})\.\s*(.+)$/i);
+    if (nm) { csl.publisher = stripTrailingDot(trim(nm[2])); csl.type = "book"; return; }
+
+    // article id: "673092 pages" (or ", 673092 pages")
+    var aim = rest.match(/^,?\s*(\d{1,6})\s+pages\.?$/i);
+    if (aim) { csl.page = aim[1]; csl.type = "article"; return; }
+
+    // book fallback: no journal signals (no "(year)", no page range) -> publisher
+    if (!/\(\d{4}\)/.test(rest) && !/[\u2013-]\s*\d{1,6}/.test(rest)) {
+      csl.publisher = stripTrailingDot(trim(rest));
+      csl.type = "book";
+      return;
+    }
+    csl["container-title"] = stripTrailingDot(trim(rest));
+  }
+
+  function extractAcm(text) {
+    var issues = [];
+    var ids = extractIdentifiers(text);
+    var t = stripAccessedPhrases(ids.rest);
+    var csl = { id: null, type: "article-journal" };
+    applyIds(csl, ids);
+    // a "https://doi.org/" remnant (DOI already captured) is not a real URL
+    if (csl.URL && /^https?:\/\/(dx\.)?doi\.org\/?$/i.test(csl.URL)) delete csl.URL;
+
+    // author-block end: first ". YYYY. " (standalone year right after the names)
+    var ym = t.match(/\. ((?:19|20)\d{2})\. /);
+    var year = null, authorBlock, after;
+    if (ym) {
+      year = parseInt(ym[1], 10);
+      authorBlock = trim(t.slice(0, ym.index));
+      after = trim(t.slice(ym.index + ym[0].length));
+    } else {
+      var yr = findYear(t);
+      year = yr ? yr.value : null;
+      authorBlock = yr ? trim(t.slice(0, yr.i)) : trim(t);
+      after = yr ? trim(t.slice(yr.i + 4)) : t;
+    }
+    if (year) csl.issued = { "date-parts": [[year]] };
+    authorBlock = authorBlock.replace(/\.+$/, "");
+    csl.author = parseAcmAuthors(authorBlock);
+    if (csl.author.etal) { csl.author = csl.author.slice(); csl.author.etal = true; }
+
+    // title = up to the first ". "
+    var tm = after.match(/^(.*?)\.\s+(.*)$/);
+    var title, rest;
+    if (tm) { title = tm[1]; rest = tm[2]; }
+    else { title = after; rest = ""; }
+    csl.title = stripTrailingDot(trim(title));
+
+    extractAcmTail(rest, csl);
+
+    if (/^arxiv preprint/i.test(rest)) { csl.type = "article"; if (!csl["container-title"]) csl["container-title"] = "arXiv preprint"; }
+    if (csl.URL && !csl["container-title"] && !csl.volume && !csl.publisher) csl.type = "webpage";
+    if (!csl["container-title"] && csl.publisher && !csl.volume && !csl.page) csl.type = "book";
+
+    return buildEntry(text, csl, issues);
+  }
+
   var EXTRACTORS = {
     apa: extractApa,
     harvard: extractHarvard,
@@ -1279,7 +1480,8 @@
     vancouver: extractVancouver,
     nature: extractNature,
     ieee: extractIeee,
-    acs: extractAcs
+    acs: extractAcs,
+    acm: extractAcm
   };
 
   /* ===== section location ===== */
@@ -1479,6 +1681,67 @@
       }
     }
     return { lines: out, trackSplits: trackSplits, anyItems: anyItems };
+  }
+
+  // Drop left-margin line numbers (review/submission formats, e.g. ACM
+  // review copies): pure-digit items that sit clearly left of the page's
+  // content left edge, either alone on a line ("1693") or glued to the
+  // line's first item ("1699[4]Joana B..."). Only strips when they appear
+  // in bulk (>=8 per page), so legitimate numbered content is untouched.
+  function stripMarginLineNumbers(lines) {
+    var byPage = {}, p, i, j, L;
+    for (i = 0; i < lines.length; i++) {
+      p = lines[i].page;
+      (byPage[p] = byPage[p] || []).push(lines[i]);
+    }
+    var out = [];
+    for (p in byPage) {
+      var pl = byPage[p];
+      // content left edge: smallest x0 bucket (4pt resolution) with a
+      // substantial number of letter-bearing lines
+      var buckets = {}, b;
+      for (j = 0; j < pl.length; j++) {
+        if (!/[A-Za-z]/.test(pl[j].text)) continue;
+        b = Math.round(pl[j].x0 / 4) * 4;
+        buckets[b] = (buckets[b] || 0) + 1;
+      }
+      var edge = 1e9;
+      for (b in buckets) {
+        if (buckets[b] >= 5 && +b < edge) edge = +b;
+      }
+      if (edge === 1e9) { out = out.concat(pl); continue; }
+      var limit = edge - 8;
+      var isBareGutter = function (l) {
+        return /^\d{1,4}$/.test(l.text) && l.x0 < limit;
+      };
+      var gluedIdx = function (l) {
+        if (!l.items || l.items.length < 2) return false;
+        var f = l.items[0], s = l.items[1];
+        return /^\d{1,4}$/.test(trim(f.str)) && f.x < limit &&
+          (s.x - (f.x + (f.width || 0))) > 6;
+      };
+      var cand = 0;
+      for (j = 0; j < pl.length; j++) {
+        if (isBareGutter(pl[j]) || gluedIdx(pl[j])) cand++;
+      }
+      if (cand < 8) { out = out.concat(pl); continue; }
+      for (j = 0; j < pl.length; j++) {
+        L = pl[j];
+        if (isBareGutter(L)) continue;
+        if (gluedIdx(L)) {
+          var its = L.items.slice(1);
+          out.push({
+            text: trim(itemsToText(its)), items: its,
+            x0: its[0].x, x1: L.x1, h: L.h, y: L.y, page: L.page,
+            fi: foldText(trim(its[0].str)), fiH: its[0].height || 0,
+            ni: its.length, col: L.col || 0, sp: L.sp || 0
+          });
+          continue;
+        }
+        out.push(L);
+      }
+    }
+    return out;
   }
 
   // Drop running heads / footers: text repeated at ~the same y on >=2 pages,
@@ -1722,7 +1985,8 @@
       for (var q = 0; q < flat.lines.length; q++) joined.push(flat.lines[q].text);
       return parseText(joined.join("\n"), opts);
     }
-    var lines = stripPageFurniture(flat.lines);
+    var lines = stripMarginLineNumbers(flat.lines);
+    lines = stripPageFurniture(lines);
     lines = orderColumns(lines);
     var texts = [];
     for (var i = 0; i < lines.length; i++) texts.push(trim(lines[i].text));
@@ -1764,7 +2028,9 @@
       parseVancouverAuthors: parseVancouverAuthors,
       parseNatureAuthors: parseNatureAuthors,
       parseIeeeAuthors: parseIeeeAuthors,
+      parseAcmAuthors: parseAcmAuthors,
       _flattenPageLines: flattenPageLines,
+      _stripMarginLineNumbers: stripMarginLineNumbers,
       _stripPageFurniture: stripPageFurniture,
       _orderColumns: orderColumns,
       _segmentGeo: segmentGeo
